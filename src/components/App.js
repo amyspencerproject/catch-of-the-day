@@ -25,7 +25,16 @@ class App extends React.Component {
     };
 
     loadSampleFishes = () => {
-        this.setState({fishes: sampleFishes}) //this sampleFishes is what we called import of sample-fishes.js
+        this.setState({fishes: sampleFishes}) //this sampleFishes is what we called the import of sample-fishes.js
+    };
+
+    addToOrder = (key) => {
+        //1. copy the state object
+        const order = { ...this.state.order};
+        //2. either add order to state or update the quantity in the order
+        order[key] = order[key] + 1 || 1;
+        //3. call setState to update the state object
+        this.setState({order: order});
     };
 
     render() {
@@ -35,7 +44,7 @@ class App extends React.Component {
                     <Header tagline = "Fresh Seafood Market" />
                     <ul className="fishes"> 
                         {Object.keys(this.state.fishes).map(key => 
-                        <Fish key={key} details={this.state.fishes[key]} />)} 
+                        <Fish key={key} details={this.state.fishes[key]} index={key} addToOrder={this.addToOrder} />)} 
                     </ul>
                 </div>
                 <Order />
