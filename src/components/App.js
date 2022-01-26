@@ -5,6 +5,7 @@ import Inventory from "./Inventory";
 import Order from "./Order";
 import sampleFishes from "../sample-fishes";
 import Fish from "./Fish";
+import base from "../base";
 
 class App extends React.Component {
 
@@ -12,6 +13,21 @@ class App extends React.Component {
         fishes: {},
         order: {}
     };
+
+
+    componentDidMount() {
+        const {params} = this.props.match;
+        this.ref = base.syncState(`${params.storeId}/fishes`, {
+            context: this,
+            state: 'fishes'
+            //sycState needs an object and this directs it to state: fishes and not state: order
+            //order will be handled in local storage
+        });
+    };
+
+    componentWillUnmount() {
+        console.log("Unmounting");
+    }
 
     addFish = (fish) => {
         //1. take a copy of existing state
