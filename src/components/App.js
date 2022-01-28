@@ -26,8 +26,9 @@ class App extends React.Component {
     };
 
     componentWillUnmount() {
-        console.log("Unmounting");
-    }
+        // console.log("Unmouinting");
+        base.removeBinding(this.ref);
+    };
 
     addFish = (fish) => {
         //1. take a copy of existing state
@@ -50,7 +51,7 @@ class App extends React.Component {
         //2. either add order to state or update the quantity in the order
         order[key] = order[key] + 1 || 1;
         //3. call setState to update the state object
-        this.setState({order: order});
+        this.setState({order});
     };
 
     render() {
@@ -60,10 +61,16 @@ class App extends React.Component {
                     <Header tagline = "Fresh Seafood Market" />
                     <ul className="fishes"> 
                         {Object.keys(this.state.fishes).map(key => 
-                        <Fish key={key} details={this.state.fishes[key]} index={key} addToOrder={this.addToOrder} />)} 
+                            <Fish 
+                                key={key} 
+                                details={this.state.fishes[key]}
+                                index={key} 
+                                addToOrder={this.addToOrder} 
+                            />
+                        )} 
                     </ul>
                 </div>
-                <Order />
+                <Order fishes={this.state.fishes} order={this.state.order}/>
                 <Inventory 
                     addFish={this.addFish} 
                     loadSampleFishes={this.loadSampleFishes} 
