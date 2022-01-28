@@ -19,7 +19,7 @@ class App extends React.Component {
         const {params} = this.props.match;
         //first reinstate localStorage
         const localStorageRef = localStorage.getItem(params.storeId);
-        
+
         if (localStorageRef) {
             this.setState({ order: JSON.parse(localStorageRef) });
         }
@@ -54,6 +54,16 @@ class App extends React.Component {
         })
     };
 
+    updateFish = (key, updatedFish) => {
+        //1. take a copy of state
+        const fishes = { ...this.state.fishes };
+        //2. update that state
+        fishes[key] = updatedFish;
+        //3. set that to state
+        this.setState({fishes});
+
+    }
+
     loadSampleFishes = () => {
         this.setState({fishes: sampleFishes}) //this sampleFishes is what we called the import of sample-fishes.js
     };
@@ -86,7 +96,9 @@ class App extends React.Component {
                 <Order fishes={this.state.fishes} order={this.state.order}/>
                 <Inventory 
                     addFish={this.addFish} 
+                    updateFish={this.updateFish}
                     loadSampleFishes={this.loadSampleFishes} 
+                    fishes={this.state.fishes}
                 />
             </div>
         );
