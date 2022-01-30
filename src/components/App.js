@@ -61,7 +61,15 @@ class App extends React.Component {
         fishes[key] = updatedFish;
         //3. set that to state
         this.setState({fishes});
+    }
 
+    deleteFish = (key) => {
+        // take a copy of state
+        const fishes = { ...this.state.fishes };
+        // update state by setting fish to null (firebase needs a null to delete)
+        fishes[key] = null;
+        //set state 
+        this.setState({fishes});
     }
 
     loadSampleFishes = () => {
@@ -97,6 +105,7 @@ class App extends React.Component {
                 <Inventory 
                     addFish={this.addFish} 
                     updateFish={this.updateFish}
+                    deleteFish={this.deleteFish}
                     loadSampleFishes={this.loadSampleFishes} 
                     fishes={this.state.fishes}
                 />
