@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes  from "prop-types";
 
 //stateless functional component can be used because no state in header only data passed in and JSX returned
 const Header = (props) => (
@@ -15,6 +16,9 @@ const Header = (props) => (
             </header>
         )
 
+Header.propTypes = {
+    tagline: PropTypes.string.isRequired
+};
 
 //state functional component which uses this. and would handle more complex data flow than stateless
 // class Header extends React.Component {
