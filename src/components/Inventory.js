@@ -1,7 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import firebase from "firebase";
 import AddFishForm from "./AddFishForm";
 import EditFishForm from "./EditFishForm";
+import Login from "./Login";
+import base, { firebaseApp } from "../base";
 
 class Inventory extends React.Component {
 
@@ -13,7 +16,41 @@ class Inventory extends React.Component {
         loadSampelFishes: PropTypes.func,
     };
 
+    state = {
+        uid: null,
+        ownder: null
+    }
+
+    authHandler = async (authData) => {
+        console.log(authData);
+        // 1. first we need to look up store in firebase database
+        const store = await base.fetch(this.props.storeId, { constext: this });
+        console.log(store);
+        // 2. claim it if we are the first owner
+        if (!store.owner)
+        //save it as our own. 
+        //the /owner creates owner field and user.uid saves a unique identifier (could also use email for id)
+        await base.post(`${this.props.storeId}/owner`, {
+            data: authData.user.uid
+        })
+        // 3. set the state of the inventory comoponenet to reflect the current user
+        this.setState({
+            uid: authData.user.uid,
+            owner: store.owner || authData.user.uid
+        })
+    };
+
+    authenticate = (provider) => {
+        // alert(provider)
+        const authProvider = new firebase.auth[`${provider}AuthProvider`]();
+        firebaseApp
+        .auth()
+        .signInWithPopup(authProvider)
+        .then(this.authHandler);
+    };
+
     render() {
+        return <Login authenticate={this.authenticate}/>;
         return (
             <div className="inventory">
                 <h2>Inventory!!!</h2>
