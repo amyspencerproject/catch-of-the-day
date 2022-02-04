@@ -18,14 +18,25 @@ class Inventory extends React.Component {
 
     state = {
         uid: null,
-        ownder: null
+        owner: null
     }
 
+    //when browser is refreshed this will check to see if we are logged in
+    componentDidMount() {
+        firebase
+        .auth()
+        .onAuthStateChanged( user => {
+            if(user) {
+                this.authHandler({ user });
+            }
+        })
+    } 
+
     authHandler = async (authData) => {
-        console.log(authData);
+        // console.log(authData);
         // 1. first we need to look up store in firebase database
         const store = await base.fetch(this.props.storeId, { constext: this });
-        console.log(store);
+        // console.log(store);
         // 2. claim it if we are the first owner
         if (!store.owner)
         //save it as our own. 
@@ -49,11 +60,38 @@ class Inventory extends React.Component {
         .then(this.authHandler);
     };
 
+    logout = async () => {
+        console.log('logging out');
+        await firebase
+        .auth()
+        .signOut();
+        this.setState({uid: null});
+    }
+
     render() {
-        return <Login authenticate={this.authenticate}/>;
+        const logout = <button onClick={this.logout}>Logout</button>
+
+        // 1. Check if they are logged in
+        if (!this.state.uid) {
+            return <Login authenticate={this.authenticate}/>;
+        }
+
+        // 2. check if they are NOT the owner of the store
+        if (this.state.uid !== this.state.owner) {
+            return(
+                <div>
+                    <p>Sorry you are not the owner</p>
+                    {logout}
+                </div>
+            );
+        }
+
+        // 3. the must be the owner so show the inventory
+       
         return (
             <div className="inventory">
                 <h2>Inventory!!!</h2>
+                {logout}
                 {Object.keys(this.props.fishes).map(key => (
                     <EditFishForm 
                         key={key}
