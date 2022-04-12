@@ -17,15 +17,10 @@ class EditFishForm extends React.Component {
     };
 
     handleChange = (e) => {
-        // console.log(e.currentTarget.name);
-        // console.log(e.currentTarget.value);
-        // console.log(updatedFish);
 
         // 1. take a copy of current fish
         const updatedFish = { 
             ...this.props.fish,
-            //computed property names which is new in es6
-            //e.currentTarget.name will notice when anything is changed bc name is a property for each field}
             [e.currentTarget.name]: e.currentTarget.value
          };
          this.props.updateFish(this.props.index, updatedFish);

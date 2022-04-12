@@ -26,9 +26,7 @@ class Inventory extends React.Component {
 
     //when browser is refreshed this will check to see if we are logged in
     componentDidMount() {
-        firebase
-        .auth()
-        .onAuthStateChanged( user => {
+        firebase.auth().onAuthStateChanged(user => {
             if(user) {
                 this.authHandler({ user });
             }
@@ -36,10 +34,8 @@ class Inventory extends React.Component {
     } 
 
     authHandler = async (authData) => {
-        // console.log(authData);
         // 1. first we need to look up store in firebase database
-        const store = await base.fetch(this.props.storeId, { constext: this });
-        // console.log(store);
+        const store = await base.fetch(this.props.storeId, { context: this });
         // 2. claim it if we are the first owner
         if (!store.owner)
         //save it as our own. 
@@ -64,7 +60,6 @@ class Inventory extends React.Component {
     };
 
     logout = async () => {
-        console.log('logging out');
         await firebase
         .auth()
         .signOut();
@@ -90,7 +85,6 @@ class Inventory extends React.Component {
         }
 
         // 3. the must be the owner so show the inventory
-       
         return (
             <div className="inventory">
                 <h2>Inventory!!!</h2>
